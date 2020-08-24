@@ -25,23 +25,7 @@ export default function App() {
 	}
 	return (
 		<Provider store={store}>
-			{/* <LinearGradient
-				style={styles.container}
-				colors={[
-					'hsla(339, 100%, 55%, 1)',
-					'hsla(197, 100%, 64%, 1)'
-				]}
-				start={[
-					0,
-					0
-				]}
-				end={[
-					1,
-					0
-				]}
-			> */}
 			<AppNavigator />
-			{/* </LinearGradient> */}
 		</Provider>
 	);
 }

@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Paragraph, IconButton, Avatar } from 'react-native-paper';
-import { View, Text, StyleSheet, Animated } from 'react-native';
+import { View, Text, StyleSheet, Animated, TouchableWithoutFeedback } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import moment from 'moment';
+import { useNavigation } from '@react-navigation/native';
 
 function Scream(props) {
+	const navigation = useNavigation();
 	const currentValue = new Animated.Value(1);
 	const { scream } = props;
+	// console.log(scream.createdAt);
 	const LeftContent = (props2) => <Avatar.Image source={{ uri: scream.userImage }} {...props2} />;
 	const [
 		isLiked,
@@ -55,23 +58,31 @@ function Scream(props) {
 				/>
 			)}
 			<Card style={styles.card}>
-				<Card.Title
-					titleStyle={{
-						fontFamily       : 'ubuntu-bold',
-						fontSize         : 22,
-						color            : Colors.primary,
-						marginHorizontal : 20
+				<TouchableWithoutFeedback
+					onPress={() => {
+						navigation.navigate('ScreamDetail', { screamId: scream._id });
 					}}
-					subtitleStyle={{
-						marginHorizontal : 20
-					}}
-					title={`@${scream.username}`}
-					subtitle={`${moment(scream.createdAt).fromNow(true)} ago`}
-					left={() => <LeftContent size={60} />}
-				/>
-				<Card.Content>
-					<Paragraph style={styles.body}>{scream.body}</Paragraph>
-				</Card.Content>
+				>
+					<View>
+						<Card.Title
+							titleStyle={{
+								fontFamily       : 'ubuntu-bold',
+								fontSize         : 22,
+								color            : Colors.primary,
+								marginHorizontal : 20
+							}}
+							subtitleStyle={{
+								marginHorizontal : 20
+							}}
+							title={`@${scream.username}`}
+							subtitle={`${moment(scream.createdAt).fromNow(true)} ago`}
+							left={() => <LeftContent size={60} />}
+						/>
+						<Card.Content>
+							<Paragraph style={styles.body}>{scream.body}</Paragraph>
+						</Card.Content>
+					</View>
+				</TouchableWithoutFeedback>
 				<Card.Actions style={{ alignItems: 'center', justifyContent: 'space-between' }}>
 					<View style={{ flexDirection: 'row' }}>
 						<IconButton

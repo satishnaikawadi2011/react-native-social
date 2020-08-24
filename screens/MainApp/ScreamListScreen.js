@@ -8,9 +8,21 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getScreams } from '../../redux/actions/scream';
 import Colors from '../../constants/Colors';
 import ScreamSkeleton from '../../components/Skeletons/ScreamSkeleton';
+import Axios from 'axios';
+import { Badge } from 'react-native-paper';
+import store from '../../redux/store';
+import CustomBadge from '../../components/UI/CustomBadge';
 
 function ScreamListScreen(props) {
 	const { screams, loading } = useSelector((state) => state.scream);
+	// useEffect(
+	// 	() => {
+	// 		props.navigation.setParams({ noOfNotifications: notifications.length });
+	// 	},
+	// 	[
+	// 		notifications
+	// 	]
+	// );
 	const dispatch = useDispatch();
 	const [
 		error,
@@ -56,15 +68,6 @@ function ScreamListScreen(props) {
 			dispatch,
 			loadScreams
 		]
-	);
-	const scream = new Scream(
-		1,
-		'It works !!!',
-		3,
-		5,
-		'saty',
-		'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-		Date.now()
 	);
 	if (error) {
 		return (
@@ -114,22 +117,27 @@ const styles = StyleSheet.create({
 });
 
 export const screenOptions = (navData) => {
+	const state = store.getState();
+	// console.log('params', navData.route);
 	return {
-		headerTitle : 'Screams',
+		headerTitle : 'My Social Media',
 		headerRight : () => (
-			<HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-				<Item
-					title="Notifications"
-					iconName={
+			<View>
+				<CustomBadge style={{ position: 'absolute', top: -10 }} />
+				<HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+					<Item
+						title="Notifications"
+						iconName={
 
-							Platform.OS === 'android' ? 'md-notifications' :
-							'ios-notifications'
-					}
-					onPress={() => {
-						// navData.navigation.navigate('Cart');
-					}}
-				/>
-			</HeaderButtons>
+								Platform.OS === 'android' ? 'md-notifications' :
+								'ios-notifications'
+						}
+						onPress={() => {
+							navData.navigation.navigate('Notification');
+						}}
+					/>
+				</HeaderButtons>
+			</View>
 		),
 
 		headerLeft  : () => (

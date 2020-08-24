@@ -6,12 +6,8 @@ import { createDrawerNavigator, DrawerItemList } from '@react-navigation/drawer'
 // import ProductOverviewScreen, { screenOptions } from '../screens/shop/ProductOverviewScreen';
 import Colors from '../constants/Colors';
 import { Platform, SafeAreaView, View, Button, Text } from 'react-native';
-import { Ionicons, AntDesign } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5, Entypo, AntDesign } from '@expo/vector-icons';
 import ScreamListScreen, { screenOptions } from '../screens/MainApp/ScreamListScreen';
-// import { useDispatch } from 'react-redux';
-// import { logout } from '../store/actions/auth';
-// import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-
 // TODO: particular screen options
 
 // export const screenOptions = (navData) => {
@@ -73,17 +69,22 @@ const defaltNavOptions = {
 };
 
 const ScreamsStackNavigator = createStackNavigator();
-
+import NotificationScreen, { screenOptions as NotificationScreenOptions } from '../screens/MainApp/NotificationScreen';
+import ScreamDetailScreen, { screenOptions as DetailScreenOptions } from '../screens/MainApp/ScreamDetailScreen';
 export const ScreamsNavigator = () => {
 	return (
 		<ScreamsStackNavigator.Navigator screenOptions={defaltNavOptions}>
-			<ScreamsStackNavigator.Screen name="ScreamsOverview" component={ScreamListScreen} options={screenOptions} />
-			{/* <ScreamsStackNavigator.Screen
-				name="ProductDetail"
-				component={ProductDetailsScreen}
-				options={productDetailsScreenOptions}
-			/> */}
-			{/* <ScreamsStackNavigator.Screen name="Cart" component={CartScreen} options={cartScreenOptions} /> */}
+			<ScreamsStackNavigator.Screen name="ScreamsOverview" component={TabNavigator} options={screenOptions} />
+			<ScreamsStackNavigator.Screen
+				name="Notification"
+				component={NotificationScreen}
+				options={NotificationScreenOptions}
+			/>
+			<ScreamsStackNavigator.Screen
+				name="ScreamDetail"
+				component={ScreamDetailScreen}
+				options={DetailScreenOptions}
+			/>
 		</ScreamsStackNavigator.Navigator>
 	);
 };
@@ -173,51 +174,83 @@ export const ScreamsNavigator = () => {
 // 	);
 // };
 
-// const AuthStackNavigator = createStackNavigator();
+const AuthStackNavigator = createStackNavigator();
+import LoginScreen from '../screens/Users/LoginScreen';
+import SignupScreen from '../screens/Users/SignupScreen';
 
-// export const AuthNavigator = () => {
-// 	return (
-// 		<AuthStackNavigator.Navigator screenOptions={defaltNavOptions}>
-// 			<AuthStackNavigator.Screen name="Auth" component={AuthScreen} options={authScreenOptions} />
-// 		</AuthStackNavigator.Navigator>
-// 	);
-// };
+export const AuthNavigator = () => {
+	return (
+		<AuthStackNavigator.Navigator screenOptions={defaltNavOptions}>
+			<AuthStackNavigator.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+			<AuthStackNavigator.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }} />
+		</AuthStackNavigator.Navigator>
+	);
+};
 
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import ProfileScreen from '../screens/Users/ProfileScreen';
+import AddScreamScreen from '../screens/Users/AddScreamScreen';
 
-// const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
-// export const App = () => {
-// 	return (
-// 		<Tab.Navigator
-// 			screenOptions={({ route }) => ({
-// 				tabBarIcon : ({ focused, color, size }) => {
-// 					let iconName;
+export const TabNavigator = () => {
+	return (
+		<Tab.Navigator
+			screenOptions={({ route }) => ({
+				tabBarIcon : ({ focused, color, size }) => {
+					let iconName;
 
-// 					if (route.name === 'Home') {
-// 						iconName =
-// 							focused ? 'ios-information-circle' :
-// 							'ios-information-circle-outline';
-// 					}
-// 					else if (route.name === 'Settings') {
-// 						iconName =
-// 							focused ? 'ios-list-box' :
-// 							'ios-list';
-// 					}
+					if (route.name === 'Home') {
+						iconName = 'home';
+						const icon =
+							focused ? <Entypo name={iconName} size={size} color={color} /> :
+							<AntDesign name={iconName} size={30} color={color} />;
+						return icon;
+					}
+					else if (route.name === 'Profile') {
+						iconName =
+							focused ? 'user-alt' :
+							'user';
+						return <FontAwesome5 name={iconName} size={30} color={color} />;
+					}
+					else if (route.name == 'Add') {
+						iconName =
+							focused ? 'md-add-circle' :
+							'md-add-circle-outline';
+						return <Ionicons name={iconName} size={30} color={color} />;
+					}
 
-// 					// You can return any component that you like here!
-// 					return <Ionicons name={iconName} size={size} color={color} />;
-// 				}
-// 			})}
-// 			tabBarOptions={tabBarOptions}
-// 		>
-// 			<Tab.Screen name="Home" component={HomeStack} />
-// 			<Tab.Screen name="Settings" component={SettingsStack} />
-// 		</Tab.Navigator>
-// 	);
-// };
+					// You can return any component that you like here!
+					// return <Ionicons name={iconName} size={size} color={color} />;
+				}
+			})}
+			tabBarOptions={{
+				...tabBarOptions
+			}}
+		>
+			<Tab.Screen name="Home" component={ScreamListScreen} options={{}} />
+			<Tab.Screen name="Add" component={AddScreamScreen} options={{ headerShown: false }} />
+			<Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
+		</Tab.Navigator>
+	);
+};
 
-// const tabBarOptions = {
-// 	activeTintColor   : 'tomato',
-// 	inactiveTintColor : 'gray'
-// };
+const tabBarOptions = {
+	activeTintColor         : Colors.primary,
+	inactiveTintColor       : 'gray',
+	activeBackgroundColor   : Colors.background,
+	inactiveBackgroundColor : 'white',
+	labelStyle              : {
+		fontSize     : 16,
+		fontFamily   : 'ubuntu-bold',
+		marginBottom : 5,
+		marginTop    : 10
+	},
+	iconStyle               : {
+		marginTop : 10
+	},
+	safeAreaInsets          : {
+		bottom : 5
+	},
+	showLabel               : false
+};
