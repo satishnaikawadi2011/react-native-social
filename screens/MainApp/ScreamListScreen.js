@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Platform, Image, View, Text, Button, StyleSheet, ActivityIndicator, FlatList } from 'react-native';
+import { Platform, Image, View, Button, StyleSheet, ActivityIndicator, FlatList } from 'react-native';
 import { Item, HeaderButtons } from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../../components/UI/CustomHeaderButton';
 import Scream from '../../models/Scream';
@@ -9,7 +9,7 @@ import { getScreams } from '../../redux/actions/scream';
 import Colors from '../../constants/Colors';
 import ScreamSkeleton from '../../components/Skeletons/ScreamSkeleton';
 import Axios from 'axios';
-import { Badge } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import store from '../../redux/store';
 import CustomBadge from '../../components/UI/CustomBadge';
 
@@ -150,7 +150,7 @@ export const screenOptions = (navData) => {
 							'ios-menu'
 					}
 					onPress={() => {
-						// navData.navigation.toggleDrawer();
+						navData.navigation.toggleDrawer();
 					}}
 				/>
 			</HeaderButtons>

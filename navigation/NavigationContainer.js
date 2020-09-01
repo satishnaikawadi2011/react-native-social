@@ -1,55 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
-import { ScreamsNavigator, AuthNavigator } from './AppNavigator';
-import { AsyncStorage } from 'react-native';
-import store from '../redux/store';
-import { SET_AUTHENTICATED } from '../redux/types';
-import JwtDecode from 'jwt-decode';
-import axios from 'axios';
-import { getUserData, logoutUser } from '../redux/actions/user';
-// import StartupScreen from '../screens/StartupScreen';
+import { ScreamsNavigator, AuthNavigator, MainNavigator } from './AppNavigator';
+import {
+	Provider as PaperProvider,
+	DarkTheme as PaperDarkTheme,
+	DefaultTheme as PaperDefaultTheme
+} from 'react-native-paper';
+import { DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme } from '@react-navigation/native';
+import StartupScreen from '../screens/StartupScreen';
 
 const AppNavigator = (props) => {
-	const isAuth = useSelector((state) => state.user.authenticated);
-	// console.log('NAv => ', isAuth);
-	const [
-		token,
-		setToken
-	] = useState(null);
-	useEffect(
-		() => {
-			AsyncStorage.getItem('token')
-				.then((data) => {
-					// console.log(data);
-					const transformedToken = JSON.parse(data).token;
-					setToken(transformedToken);
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-		},
-		[
-			token
-		]
-	);
-	if (token) {
-		const decodedToken = JwtDecode(token);
-		if (decodedToken.exp * 1000 < Date.now()) {
-			store.dispatch(logoutUser());
+	const token = useSelector((state) => !!state.user.token);
+	const username = useSelector((state) => !!state.user.credentials.username);
+	const isAuth = token;
+	const { credentials } = useSelector((state) => state.user);
+	const didTryAutoLogin = useSelector((state) => state.user.didTryAutoLogin);
+	const isDarkTheme = props.isDarkTheme;
+
+	const CustomDefaultTheme = {
+		...NavigationDefaultTheme,
+		...PaperDefaultTheme,
+		colors : {
+			...NavigationDefaultTheme.colors,
+			...PaperDefaultTheme.colors
 		}
-		else {
-			store.dispatch({ type: SET_AUTHENTICATED });
-			store.dispatch(getUserData());
+	};
+
+	const CustomDarkTheme = {
+		...NavigationDarkTheme,
+		...PaperDarkTheme,
+		colors : {
+			...NavigationDarkTheme.colors,
+			...PaperDarkTheme.colors
 		}
-	}
+	};
+
+	const theme =
+		isDarkTheme ? CustomDarkTheme :
+		CustomDefaultTheme;
+
 	return (
-		<NavigationContainer>
-			{/* <ScreamsNavigator /> */}
-			{!isAuth && <AuthNavigator />}
-			{isAuth && <ScreamsNavigator />}
-			{/*{!isAuth && didTryAutoLogin && <AuthNavigator />}
-			{!isAuth && !didTryAutoLogin && <StartupScreen />} */}
+		<NavigationContainer theme={theme}>
+			{isAuth && <MainNavigator setIsDarkTheme={props.setIsDarkTheme} />}
+			{!isAuth && didTryAutoLogin && <AuthNavigator />}
+			{!isAuth && !didTryAutoLogin && <StartupScreen />}
 		</NavigationContainer>
 	);
 };

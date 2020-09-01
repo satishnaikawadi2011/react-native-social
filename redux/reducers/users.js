@@ -3,32 +3,72 @@ import {
 	SET_ERRORS,
 	CLEAR_ERRORS,
 	LOADING_UI,
-	SET_AUTHENTICATED,
-	SET_UNAUTHENTICATED,
 	LOADING_USER,
 	LIKE_SCREAM,
 	UNLIKE_SCREAM,
-	MARK_NOTIFICATIONS_READ
+	MARK_NOTIFICATIONS_READ,
+	TOGGLE_THEME,
+	SET_USER_DETAILS,
+	SET_USER_SCREAMS,
+	LOGIN,
+	SIGNUP,
+	LOGOUT,
+	SET_DID_TRY_AL
 } from '../types';
+import { AUTHENTICATE } from '../actions/user';
 
 const initialState = {
-	authenticated : false,
-	credentials   : {},
-	likes         : [],
-	loading       : false,
-	notifications : []
+	credentials     : {},
+	likes           : [],
+	loading         : false,
+	notifications   : [],
+	isDarkTheme     : false,
+	screams         : [],
+	userDetails     : {},
+	token           : null,
+	didTryAutoLogin : false
 };
 
 export default function(state = initialState, action) {
 	switch (action.type) {
-		case SET_UNAUTHENTICATED:
-			return initialState;
-		case SET_AUTHENTICATED:
-			return { ...state, authenticated: true };
+		case AUTHENTICATE:
+			return { ...state, token: action.payload };
+		case LOGIN:
+			return {
+				...state,
+				token           : action.payload,
+				didTryAutoLogin : true
+			};
+		case SIGNUP:
+			return {
+				...state,
+				token : action.payload
+			};
+		case LOGOUT:
+			return {
+				...initialState,
+				didTryAutoLogin : true
+			};
+		case SET_DID_TRY_AL:
+			return {
+				...state,
+				didTryAutoLogin : true
+			};
 		case SET_USER:
 			return { ...state, ...action.payload, loading: false };
 		case LOADING_USER:
 			return { ...state, loading: true };
+		case SET_USER_DETAILS:
+			return {
+				...state,
+				userDetails : action.payload
+			};
+
+		case SET_USER_SCREAMS:
+			return {
+				...state,
+				screams : action.payload
+			};
 		case LIKE_SCREAM:
 			return {
 				...state,
@@ -49,6 +89,11 @@ export default function(state = initialState, action) {
 			state.notifications.forEach((not) => (not.read = true));
 			return {
 				...state
+			};
+		case TOGGLE_THEME:
+			return {
+				...state,
+				isDarkTheme : !state.isDarkTheme
 			};
 		default:
 			return state;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Paragraph, IconButton, Avatar } from 'react-native-paper';
-import { View, Text, StyleSheet, Animated, TouchableWithoutFeedback } from 'react-native';
+import { Card, Paragraph, IconButton, Avatar, Text } from 'react-native-paper';
+import { View, StyleSheet, Animated, TouchableWithoutFeedback } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import moment from 'moment';
